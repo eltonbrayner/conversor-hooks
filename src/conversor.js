@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import "./conversor.css";
 import {
   Jumbotron,
@@ -13,10 +13,37 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleRight } from "@fortawesome/free-solid-svg-icons";
 
+import ListarMoedas from "./ListarMoedas"
+
 function Conversor() {
+
+  const [valor, setValor] = useState(1)
+  const [moedaDe, setMoedaDe] = useState('BRL')
+  const [moedaPara, setMoedaPara] = useState('USD')
+  const [spinner, setPinner] = useState(false)
+  const [formValidado, setFormValidado] = useState(false)
+
+  function handleValor(event){
+    const {value} = event.target
+    return !isNaN(value) ? setValor(value) : setValor(valor)
+  }
+
+  function handleMoedaDe(event){
+    const {value} = event.target
+    return setMoedaDe(value)
+  }
+
+  function handleMoedaPara(event){
+    const {value} = event.target
+    return setMoedaPara(value)
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(event.target);
+    setFormValidado(true)
+    if(event.currentTarget.checkValidity() === true){
+      alert(process.env.REACT_APP_NOT_SECRET_CODE)
+    }
   }
 
   return (
@@ -26,24 +53,34 @@ function Conversor() {
         Erro ao realizar a conversão
       </Alert>
       <Jumbotron>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} noValidate validated={formValidado}>
           <Form.Row>
             <Col sm="3">
-              <Form.Control placeholder="0" value={1} required />
+              <Form.Control placeholder="0" value={valor} onChange={handleValor} required />
             </Col>
             <Col sm="3">
-              <Form.Control as="select"></Form.Control>
+              <Form.Control 
+                as="select"
+                value={moedaDe}
+                onChange={handleMoedaDe}>
+                <ListarMoedas />
+              </Form.Control>
             </Col>
             <Col sm="1" className="text-center" style={{ paddingTop: "5px" }}>
               <FontAwesomeIcon icon={faAngleDoubleRight} />
             </Col>
             <Col sm="3">
-              <Form.Control as="select"></Form.Control>
+            <Form.Control 
+                as="select"
+                value={moedaPara}
+                onChange={handleMoedaPara}>
+                <ListarMoedas />
+              </Form.Control>
             </Col>
             <Col sm="2">
               <Button variant="success" type="submit">
-                <Spinner animation="border" size="sm" />
-                Converter
+                <span className={spinner ? null : "hidden"}><Spinner animation="border" size="sm" /></span>
+                <span className={spinner ? "hidden" : null}>Converter</span>
               </Button>
             </Col>
           </Form.Row>

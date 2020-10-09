@@ -172,7 +172,19 @@ function ListarMoedas() {
     { sigla: "ZWL", descricao: "Zimbabwean Dollar" },
   ];
 
-  return <h1>Teste </h1>;
+  function compare(moeda1, moeda2){
+    if(moeda1.descricao < moeda2.descricao){
+      return -1
+    }else if(moeda1.descricao > moeda2.descricao){
+      return 1
+    }
+    return 0
+  }
+  return moedas.sort(compare).map(moeda => {
+    return <option key={moeda.sigla} value={moeda.sigla}>
+    {moeda.descricao}
+  </option>
+  })
 }
 
 export default ListarMoedas;
